@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Harfiyle Clandras Macerası - Uşak</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+            font-family: 'Comic Sans MS', Arial, sans-serif;
+            text-align: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            padding: 20px;
+            border: 5px solid #4CAF50;
+        }
+        h1 { color: #2E7D32; margin-bottom: 5px; }
+        .subtitle { color: #555; font-size: 16px; margin-bottom: 20px; }
+        
+        /* مشهد Uşak و Clandras */
+        .scene-box {
+            position: relative;
+            height: 250px;
+            background: #d4f4ff;
+            border-radius: 15px;
+            border: 3px solid #b0e0e6;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .bridge {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 80px;
+            background: #8b8b8b;
+            border-radius: 150px 150px 0 0;
+            border: 4px solid #555;
+        }
+        .river {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background: #1E90FF;
+            border-top: 4px solid #00BFFF;
+        }
+        .explorer {
+            position: absolute;
+            bottom: 60px;
+            left: 100px;
+            font-size: 40px;
+            transition: left 0.5s;
+        }
+
+        /* لوحة التحديات */
+        .challenge-card {
+            background: #f9f9f9;
+            border: 2px dashed #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.2s;
+        }
+        .btn:hover { background-color: #45a049; transform: scale(1.05); }
+        .choice-btn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .choice-btn:hover { background-color: #e68a00; }
+        .hidden { display: none; }
+        .score-board { font-size: 20px; font-weight: bold; color: #2E7D32; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>A Harfiyle Clandras Macerası</h1>
+        <div class="subtitle">Uşak'ı Keşfet, Kültürünü Tanı, A Harfini Bul!</div>
+
+        <!-- شاشة القصة والبيئة -->
+        <div class="scene-box" id="sceneBox">
+            <div class="bridge"></div>
+            <div class="river"></div>
+            <div class="explorer" id="explorer">🧒🎒</div>
+        </div>
+
+        <!-- منطقة التحديات التفاعلية -->
+        <div id="gameArea" class="challenge-card">
+            <div id="step0">
+                <p id="storyText" style="font-size: 18px; line-height: 1.6;">
+                    "Merhaba küçük kâşif! Bugün Uşak'ın Karahallı ilçesindeki tarihî <b>Clandras Su Kemeri</b>'ni ve altından akan <b>Banaz Çayı</b>'nı keşفedeceğiz. Yaklaşık 2.500 yıllık bu yapıda harف <b>A</b>'yı bulmamıza yardım eder misin?"
+                </p>
+                <button class="btn" onclick="startJourney()">Maceraya Başla! 🚀</button>
+            </div>
+
+            <!-- التحدي الأول: Banaz Çayı'nın Sesleri (الوعي الصوتي) -->
+            <div id="step1" class="hidden">
+                <h3>1. Bölüm: Banaz Çayı'nın Sesleri 🌊</h3>
+                <p>Hangi kelime <b>"A"</b> sesi ile başlar?</p>
+                <button class="choice-btn" onclick="checkSound(false, 'kedi')">🐱 Kedi</button>
+                <button class="choice-btn" onclick="checkSound(true, 'ari')">🐝 Arı</button>
+                <button class="choice-btn" onclick="checkSound(false, 'elma')">🍎 Elma (İçinde var ama A ile başlamaz!)</button>
+                <p id="feedback1" style="font-weight: bold; margin-top: 10px;"></p>
+            </div>
+
+            <!-- التحدي الثاني: Clandras'ın Harf Sırrı (ترميم الجسر والتمييز البصري) -->
+            <div id="step2" class="hidden">
+                <h3>2. Bölüm: Clandras'ın Tarihî Sırrı 🌉</h3>
+                <p>Su kemerini onarmak için doğru <b>A</b> harflerini seç:</p>
+                <button class="choice-btn" onclick="checkBridge('b')">B</button>
+                <button class="choice-btn" onclick="checkBridge('A')">A (Büyük)</button>
+                <button class="choice-btn" onclick="checkBridge('m')">M</button>
+                <button class="choice-btn" onclick="checkBridge('a')">a (Küçük)</button>
+                <p id="feedback2" style="font-weight: bold; margin-top: 10px;"></p>
+            </div>
+
+            <!-- شاشة النتائج -->
+            <div id="step3" class="hidden">
+                <h3>🎉 Tebrikler Küçük Kâşif!</h3>
+                <p class="score-board" id="finalScore"></p>
+                <p>Uşak'ın tarihî Clandras Köprüsü'nü başarıyla keşfettin ve A harfini öğrendin!</p>
+                <button class="btn" onclick="location.reload()">Tekrar Oyna 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                let utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'tr-TR';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startJourney() {
+            speakText("Merhaba küçük kâşif! Haydi maceraya başlayalım.");
+            document.getElementById('step0').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('explorer').style.left = '350px';
+        }
+
+        function checkSound(isCorrect, word) {
+            let feedback1 = document.getElementById('feedback1');
+            if (isCorrect) {
+                score += 50;
+                feedback1.style.color = 'green';
+                feedback1.innerText = "Harika! 'Arı' kelimesi A sesiyle başlar. 👏";
+                speakText("Harika! Doğru cevap.");
+                setTimeout(() => {
+                    document.getElementById('step1').classList.add('hidden');
+                    document.getElementById('step2').classList.remove('hidden');
+                    document.getElementById('explorer').style.left = '600px';
+                }, 1500);
+            } else {
+                feedback1.style.color = 'red';
+                feedback1.innerText = "Tekrar dene! Hangisi A sesiyle başlıyor?";
+                speakText("Bir daha deneyelim.");
+            }
+        }
+
+        let bridgeCount = 0;
+        function checkBridge(letter) {
+            let feedback2 = document.getElementById('feedback2');
+            if (letter === 'A' || letter === 'a') {
+                bridgeCount++;
+                score += 50;
+                speakText("Doğru harف!");
+                if (bridgeCount >= 2) {
+                    feedback2.style.color = 'green';
+                    feedback2.innerText = "Köprü başarıyla onarıldı! 🎉";
+                    speakText("Başardın! Tebrikler!");
+                    setTimeout(showResults, 1500);
+                } else {
+                    feedback2.style.color = 'green';
+                    feedback2.innerText = "Harika! Bir tane daha bul (Büyük veya küçük a).";
+                }
+            } else {
+                feedback2.style.color = 'red';
+                feedback2.innerText = "Bu A harfi değil, tekrar dene!";
+                speakText("Bir daha deneyelim.");
+            }
+        }
+
+        function showResults() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = `Toplam Puan: ${score} / 100 🌟 Yıldız Kazandın!`;
+        }
+    </script>
+</body>
+</html>
